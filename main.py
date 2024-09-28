@@ -23,7 +23,7 @@ busy_cells = 0
 points_counter = 0
 start_time = 0
 fall_speed = 5
-difficulty = 15
+difficulty = 5
 forms ={'I': [[1, 0, 0, 0], [1, 0, 0, 0], [1, 0, 0, 0], [1, 0, 0, 0]],
         'J': [[0, 0, 0, 0], [0, 1, 0, 0], [0, 1, 0, 0], [1, 1, 0, 0]],
         'L': [[0, 0, 0, 0], [1, 0, 0, 0], [1, 0, 0, 0], [1, 1, 0, 0]],
@@ -189,32 +189,27 @@ class Figure:
             for item in row:
                 copy_row.append(item)
             copy_form.append(copy_row)
-        if self.rotation == 1 or self.rotation == 3:
-            max_right_prev, max_right_post = 0, 0
-            for y in range(len(self.form)):
-                if max_right_prev < max([i if self.form[y][i] == 1 else 0 for i in range(len(self.form[y]))]):
-                    max_right_prev = max([i if self.form[y][i] == 1 else 0 for i in range(len(self.form[y]))])
-                if max_right_post < max([i if copy_form[i][y] == 1 else 0 for i in range(len(copy_form[y]))]):
-                    max_right_post = max([i if copy_form[i][y] == 1 else 0 for i in range(len(copy_form[y]))])
-            if (375 - (self.x + 25 * max_right_prev)) - (max_right_post - max_right_prev) * 25 < 0:
-                self.rotation -= 1
-                return
-            for y in range(len(self.form)):
-                for x in range(len(self.form[y])):
-                    self.form[y][x] = copy_form[x][y]
-        elif self.rotation == 2 or self.rotation == 0:
-            min_left_prev, min_left_post = 3, 3
-            for y in range(len(self.form)):
-                if min_left_prev > min([i if self.form[y][i] == 1 else 0 for i in range(len(self.form[y]))]):
-                    min_left_prev = min([i if self.form[y][i] == 1 else 0 for i in range(len(self.form[y]))])
-                if min_left_post > min([i if copy_form[i][3 - y] == 1 else 0 for i in range(len(copy_form[y]))]):
-                    min_left_post = min([i if copy_form[i][3 - y] == 1 else 0 for i in range(len(copy_form[y]))])
-            if self.x - (min_left_prev - min_left_post) * 25 < 0:
-                self.rotation -= 1
-                return
-            for y in range(len(self.form)):
-                for x in range(len(self.form[y])):
-                    self.form[y][x] = copy_form[x][3 - y]
+        max_right_prev, max_right_post = 0, 0
+        for y in range(len(self.form)):
+            if max_right_prev < max([i if self.form[y][i] == 1 else 0 for i in range(len(self.form[y]))]):
+                max_right_prev = max([i if self.form[y][i] == 1 else 0 for i in range(len(self.form[y]))])
+            if max_right_post < max([i if copy_form[3 - i][y] == 1 else 0 for i in range(len(copy_form[y]))]):
+                max_right_post = max([i if copy_form[3 - i][y] == 1 else 0 for i in range(len(copy_form[y]))])
+        if (375 - (self.x + rect_size * max_right_prev)) - (max_right_post - max_right_prev) * rect_size < 0:
+            self.rotation = (self.rotation + 3) % 4
+            return
+        min_left_prev, min_left_post = 3, 3
+        for y in range(len(self.form)):
+            if min_left_prev > min([i if self.form[y][i] == 1 else 4 for i in range(len(self.form[y]))]):
+                min_left_prev = min([i if self.form[y][i] == 1 else 4 for i in range(len(self.form[y]))])
+            if min_left_post > min([i if copy_form[3 - i][y] == 1 else 4 for i in range(len(copy_form[y]))]):
+                min_left_post = min([i if copy_form[3 - i][y] == 1 else 4 for i in range(len(copy_form[y]))])
+        if (self.x + rect_size * min_left_prev) - (min_left_prev - min_left_post) * rect_size < 0:
+            self.rotation = (self.rotation + 3) % 4
+            return
+        for y in range(len(self.form)):
+            for x in range(len(self.form[y])):
+                self.form[y][x] = copy_form[3 - x][y]
 
 
 pygame.init()
