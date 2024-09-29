@@ -1,7 +1,7 @@
 import random
 import pygame
 
-from game_functions import create_grid, valid_moving, figure_move, deleting_row, Figure
+from game_functions import create_grid, valid_moving, figure_move, deleting_row, Figure, setting_figure
 from utils import start, restart, get_information, is_game_over
 
 pygame.font.init()
@@ -60,42 +60,19 @@ def main():
                     (dx, dy) = figure_move(event, validation_move)
                     if event.key == pygame.K_SPACE:
                         cur_fig.rotation = (cur_fig.rotation + 1) % 4
-                        cur_fig.change_rotation(locked_position)
-            cur_grid = create_grid(locked_position)
+                        cur_fig.change_rotation(locked_position=locked_position)
+            cur_grid = create_grid(locked_position=locked_position)
             for y in range(len(cur_grid)):
                 for x in range(len(cur_grid[y])):
                     pygame.draw.rect(dis, cur_grid[y][x], (x * rect_size, 150 + y * rect_size, rect_size, rect_size))
-
             cur_fig.y += dy
             cur_fig.x += dx
-            if dy == 0 and dx == 0:
-                for y in range(4):
-                    for x in range(4):
-                        if cur_fig.form[y][x] == 1:
-                            locked_position[(cur_fig.x + x * rect_size, cur_fig.y - (3 - y) * rect_size)] = cur_fig.color
-
-            min_y_by_x = [-1, -1, -1, -1]
-            for y in range(4):
-                for x in range(4):
-                    if cur_fig.form[y][x] == 1:
-                        min_y_by_x[x] = y
-
-            for y in range(4):
-                for x in range(4):
-                    if cur_fig.form[y][x] == 1:
-                        if (cur_fig.x + x * rect_size, ((cur_fig.y + rect_size * (min_y_by_x[x] - 2)) // rect_size) * rect_size) in locked_position.keys():
-                            locked_position[(cur_fig.x + x * rect_size, (cur_fig.y // rect_size * rect_size) - (3 - min_y_by_x[x]) * rect_size)] = cur_fig.color
-                            for j in range(4):
-                                for i in range(4):
-                                    if cur_fig.form[j][i] == 1:
-                                        locked_position[(cur_fig.x + i * rect_size, (cur_fig.y // rect_size * rect_size) - (3 - j) * rect_size)] = cur_fig.color
-                            break
-
+            locked_position = setting_figure(dy, dx, cur_fig, locked_position=locked_position)
             if len(locked_position) > busy_cells:
                 cur_fig = next_fig
                 next_fig = Figure(150, 150, random.choice(list(forms.values())), colors)
                 game_over = is_game_over(cur_grid)
-            (locked_position, points_counter) = deleting_row(points_counter, locked_position)
+            (locked_position, points_counter) = deleting_row(points_counter, locked_position=locked_position)
             for y in range(4):
                 for x in range(4):
                     if cur_fig.form[y][x] == 1:
@@ -104,7 +81,7 @@ def main():
             clock.tick(difficulty)
             busy_cells = len(locked_position)
 
-        (game_over, locked_position, busy_cells, start_time, points_counter) = restart(game_over_font, dis, clock, colors, points_counter, locked_position, busy_cells, start_time)
+        (game_over, locked_position, busy_cells, start_time, points_counter) = restart(game_over_font, dis, clock, colors, points_counter)
 
     pygame.quit()
     quit()

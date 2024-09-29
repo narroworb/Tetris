@@ -98,3 +98,28 @@ class Figure:
         for y in range(len(self.form)):
             for x in range(len(self.form[y])):
                 self.form[y][x] = copy_form[3 - x][y]
+
+def setting_figure(dy, dx, cur_fig, locked_position={}, rect_size=25,):
+    if dy == 0 and dx == 0:
+        for y in range(4):
+            for x in range(4):
+                if cur_fig.form[y][x] == 1:
+                    locked_position[(cur_fig.x + x * rect_size, cur_fig.y - (3 - y) * rect_size)] = cur_fig.color
+
+    min_y_by_x = [-1, -1, -1, -1]
+    for y in range(4):
+        for x in range(4):
+            if cur_fig.form[y][x] == 1:
+                min_y_by_x[x] = y
+
+    for y in range(4):
+        for x in range(4):
+            if cur_fig.form[y][x] == 1:
+                if (cur_fig.x + x * rect_size, ((cur_fig.y + rect_size * (min_y_by_x[x] - 2)) // rect_size) * rect_size) in locked_position.keys():
+                    locked_position[(cur_fig.x + x * rect_size, (cur_fig.y // rect_size * rect_size) - (3 - min_y_by_x[x]) * rect_size)] = cur_fig.color
+                    for j in range(4):
+                        for i in range(4):
+                            if cur_fig.form[j][i] == 1:
+                                locked_position[(cur_fig.x + i * rect_size, (cur_fig.y // rect_size * rect_size) - (3 - j) * rect_size)] = cur_fig.color
+                    break
+    return locked_position

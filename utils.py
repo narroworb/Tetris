@@ -57,7 +57,7 @@ def is_game_over(grid, black=(0, 0, 0)):
         if grid[y].count(black) != 16:
             return True
 
-def restart(game_over_font, dis, clock, colors, points_counter, locked_position, busy_cells, start_time, black=(0, 0, 0), rect_size=25, display_width=400, display_height=850):
+def restart(game_over_font, dis, clock, colors, points_counter, black=(0, 0, 0), rect_size=25, display_width=400, display_height=850):
     game_over_message = game_over_font.render('ИГРА ЗАКОНЧЕНА', True, colors['red'])
     game_over_points = game_over_font.render(f'Ваш счёт: {points_counter}', True, (255, 255, 255))
     restart_font = pygame.font.Font('./fonts/Domino Italic.otf', rect_size)
