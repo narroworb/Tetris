@@ -16,9 +16,9 @@ colors = {'red': (255, 0, 0),
         'violet': (238, 130, 238)
         }
 game_over, is_quit = False, False
-game_over_font = pygame.font.Font('./fonts/Boncegro FF 4F.otf', 50)
-start_font = pygame.font.Font('./fonts/Boncegro FF 4F.otf', 45)
-title_font = pygame.font.Font('./fonts/Boncegro FF 4F.otf', 70)
+game_over_font = pygame.font.Font('C:/Users/79611/PycharmProjects/Tetris/fonts/Boncegro FF 4F.otf', 50)
+start_font = pygame.font.Font('C:/Users/79611/PycharmProjects/Tetris/fonts/Boncegro FF 4F.otf', 45)
+title_font = pygame.font.Font('C:/Users/79611/PycharmProjects/Tetris/fonts/Boncegro FF 4F.otf', 70)
 display_height, display_width = 850, 400
 rect_size = 25
 locked_position = {}
