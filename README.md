@@ -346,6 +346,6 @@ ____
 ____
 ## *Скриншоты из игры*
 
-![screen1]()
-![screen2]()
-![screen3]()
+![screen1](start_screen.png)
+![screen2](game_screen.png)
+![screen3](game_over_screen.png)
